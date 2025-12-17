@@ -47,7 +47,8 @@ src/
 │   └── App.tsx           # Roteamento principal e Layout
 ├── contexts/             # Gerenciamento de estado global (ex: Modais)
 └── main.tsx              # Ponto de entrada (React Router)```
-
+```
+```markdown
 
 ## Bibliotecas Principais
 Roteamento: react-router-dom (Navegação profissional com URLs limpas).
