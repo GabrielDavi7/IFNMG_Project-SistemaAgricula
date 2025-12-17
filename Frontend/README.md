@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+```markdown
+# 🌱 Frontend - Sistema Agrícola
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-5-purple?logo=vite)
+![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan?logo=tailwindcss)
 
-Currently, two official plugins are available:
+Esta é a interface cliente do Sistema de Gestão Agrícola. Uma SPA (Single Page Application) moderna, responsiva e focada na experiência do usuário rural.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🖥️ Módulos Implementados
 
-## React Compiler
+O frontend já conta com interfaces completas para:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **🐮 Gestão de Animais:** Listagem, Cadastro (com validação), Relatório detalhado.
+* **🌾 Plantação (Crops):** Monitoramento de safra, Registro de Plantio e Colheita.
+* **🐛 Pragas:** Dashboard de ocorrências com alertas visuais de severidade.
+* **💰 Finanças:** Dashboard financeiro com fluxo de caixa e relatórios (Entradas/Saídas).
+* **⛅ Clima:** Integração visual para previsão do tempo e histórico.
+* **🥗 Dieta:** Controle nutricional por lotes.
+* **📅 Sazonais:** Gestão de projetos de infraestrutura e ciclos.
 
-## Expanding the ESLint configuration
+## ⚙️ Instalação e Execução
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Certifique-se de estar dentro da pasta `frontend` no seu terminal.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 1. Instalar Dependências
+```bash
+npm install
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 2. Rodar Servidor de Desenvolvimento
+```bash
+npm run dev
+```
+O projeto rodará em: http://localhost:5173/
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+###🧩 Estrutura de Pastas
+```bash
+src/
+├── app/
+│   ├── components/       # Componentes isolados por domínio
+│   │   ├── animals/      # Tudo sobre Animais (Dashboard, Forms)
+│   │   ├── crops/        # Tudo sobre Plantação
+│   │   ├── finance/      # Tudo sobre Finanças
+│   │   ├── ...           # Outros módulos (climate, diet, pests)
+│   │   └── others/       # Componentes globais (Navigation, Toast)
+│   └── App.tsx           # Roteamento principal e Layout
+├── contexts/             # Gerenciamento de estado global (ex: Modais)
+└── main.tsx              # Ponto de entrada (React Router)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Bibliotecas Principais
+Roteamento: react-router-dom (Navegação profissional com URLs limpas).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Estilização: tailwindcss (Estilos utilitários e responsivos).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Ícones: lucide-react (Ícones SVG leves e modernos).
+
+Build: vite (Compilação extremamente rápida).
