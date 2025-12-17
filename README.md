@@ -18,7 +18,7 @@ O projeto está dividido em duas camadas principais:
 O sistema visa resolver dores comuns do produtor rural:
 - **Centralização de Dados:** Fim das planilhas espalhadas e cadernos de campo.
 - **Controle Financeiro:** Visão clara de lucros e despesas por safra ou lote.
-- **Histórico:** Rastreabilidade completa de animais e talhões.
+- **Monitoramento:** Controle completa de animais.
 - **Alertas:** Monitoramento de pragas e condições climáticas críticas.
 
 ## 🛠️ Como rodar o projeto
