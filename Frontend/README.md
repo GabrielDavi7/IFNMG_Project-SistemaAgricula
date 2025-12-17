@@ -46,8 +46,7 @@ src/
 │   │   └── others/       # Componentes globais (Navigation, Toast)
 │   └── App.tsx           # Roteamento principal e Layout
 ├── contexts/             # Gerenciamento de estado global (ex: Modais)
-└── main.tsx              # Ponto de entrada (React Router)
-
+└── main.tsx              # Ponto de entrada (React Router)```
 
 
 ## Bibliotecas Principais
