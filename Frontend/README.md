@@ -50,7 +50,7 @@ src/
 
 
 
-### Bibliotecas Principais
+## Bibliotecas Principais
 Roteamento: react-router-dom (Navegação profissional com URLs limpas).
 
 Estilização: tailwindcss (Estilos utilitários e responsivos).
