@@ -1,6 +1,5 @@
 # 🚜 Sistema de Gestão Agrícola - Projeto IFNMG (Full Stack)
 
-![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-Em_Desenvolvimento-yellow)
 
 Bem-vindo ao repositório oficial do **Sistema de Gestão Agrícola**. Este é um projeto acadêmico desenvolvido para modernizar o controle de propriedades rurais, integrando gestão de rebanho, plantações e finanças.
