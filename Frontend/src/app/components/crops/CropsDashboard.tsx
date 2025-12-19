@@ -13,9 +13,7 @@ interface CropsDashboardProps {
   onNavigate: (page: string) => void;
 }
 
-export function CropsDashboard({
-  onNavigate,
-}: CropsDashboardProps) {
+export function CropsDashboard({ onNavigate }: CropsDashboardProps) {
   // DADOS SINCRONIZADOS COM O RELATÓRIO GERAL
   const crops = [
     {
@@ -49,17 +47,14 @@ export function CropsDashboard({
             onClick={() => onNavigate("home")}
             className="flex items-center text-white/80 hover:text-white mb-6 transition-colors text-base font-medium"
           >
-            <ArrowLeft className="w-6 h-6 mr-2" /> Voltar ao
-            menu principal
+            <ArrowLeft className="w-6 h-6 mr-2" /> Voltar ao menu principal
           </button>
           <div className="flex items-center gap-4">
             <div className="bg-white/10 p-3 rounded-xl border border-white/20">
               <Wheat className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">
-                Gestão de Plantação
-              </h1>
+              <h1 className="text-2xl font-bold">Gestão de Plantação</h1>
               <p className="text-green-100 text-sm">
                 Controle de safras, talhões e colheitas.
               </p>
@@ -76,9 +71,7 @@ export function CropsDashboard({
               <p className="text-xs text-gray-500 uppercase font-bold">
                 Área Total Plantada
               </p>
-              <h3 className="text-2xl font-bold text-gray-800">
-                1.250 ha
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800">1.250 ha</h3>
             </div>
             <Map className="w-8 h-8 text-[#93a42a]/20" />
           </div>
@@ -87,9 +80,7 @@ export function CropsDashboard({
               <p className="text-xs text-gray-500 uppercase font-bold">
                 Estimativa Total
               </p>
-              <h3 className="text-2xl font-bold text-gray-800">
-                4.500 Ton
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800">4.500 Ton</h3>
             </div>
             <BarChart3 className="w-8 h-8 text-green-500/20" />
           </div>
@@ -129,8 +120,7 @@ export function CropsDashboard({
             onClick={() => onNavigate("crops-report")} // <-- Nova rota para o relatório de plantação
             className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
           >
-            <FileText className="w-4 h-4 text-gray-500" /> Gerar
-            Relatório
+            <FileText className="w-4 h-4 text-gray-500" /> Gerar Relatório
           </button>
         </div>
 
@@ -184,7 +174,11 @@ export function CropsDashboard({
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-bold ${crop.cultura === "Milho" ? "bg-yellow-100 text-yellow-700" : "bg-green-100 text-green-700"}`}
+                      className={`px-2 py-1 rounded-full text-xs font-bold ${
+                        crop.cultura === "Milho"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-green-100 text-green-700"
+                      }`}
                     >
                       {crop.status}
                     </span>
