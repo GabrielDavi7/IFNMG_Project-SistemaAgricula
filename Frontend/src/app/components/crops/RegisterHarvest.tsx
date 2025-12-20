@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  ArrowLeft,
-  Save,
-  Upload,
-  CheckCircle2,
-  Wheat,
-} from "lucide-react";
+import { ArrowLeft, Save, CheckCircle2, Wheat } from "lucide-react";
 
 // --- 1. MODAL DE SUCESSO ---
 interface SuccessModalProps {
@@ -15,12 +9,7 @@ interface SuccessModalProps {
   message: string;
 }
 
-function SuccessModal({
-  isOpen,
-  onClose,
-  title,
-  message,
-}: SuccessModalProps) {
+function SuccessModal({ isOpen, onClose, title, message }: SuccessModalProps) {
   if (!isOpen) return null;
 
   return (
@@ -33,9 +22,7 @@ function SuccessModal({
         <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-bounce">
           <CheckCircle2 className="w-8 h-8 text-green-600" />
         </div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">
-          {title}
-        </h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">{title}</h2>
         <p className="text-gray-500 mb-6 text-sm">{message}</p>
         <button
           onClick={onClose}
@@ -53,9 +40,7 @@ interface RegisterHarvestProps {
   onNavigate: (page: string) => void;
 }
 
-export function RegisterHarvest({
-  onNavigate,
-}: RegisterHarvestProps) {
+export function RegisterHarvest({ onNavigate }: RegisterHarvestProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 

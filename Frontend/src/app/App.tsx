@@ -13,6 +13,11 @@ import {
   Lock,
 } from "lucide-react";
 
+// --- NOVOS IMPORTS DE AUTH ---
+import { AuthProvider, useAuth } from "../contexts/LoginScren";
+import { Login } from "./components/auth/login";
+// -----------------------------
+
 import { SuccessProvider } from "../contexts/SuccessContext";
 import { Navigation } from "./components/others/Navigation";
 import { Toast, type ToastType } from "./components/others/Toast";
@@ -48,7 +53,7 @@ import { DietReport } from "./components/diet/DietReport";
 
 import { GeneralReport } from "./components/others/GeneralReport";
 
-// --- COMPONENTE HOME (Internalizado para evitar erro de re-render) ---
+// --- COMPONENTE HOME ---
 interface HomeProps {
   onNavigate: (page: string, restricted?: boolean) => void;
   isAdmin: boolean;
@@ -56,7 +61,6 @@ interface HomeProps {
 }
 
 function HomeComponent({ onNavigate, isAdmin, time }: HomeProps) {
-  // Dados estáticos da Home
   const recentActivities = [
     {
       id: 1,
@@ -145,7 +149,6 @@ function HomeComponent({ onNavigate, isAdmin, time }: HomeProps) {
       <div className="max-w-7xl mx-auto px-6 py-12 flex-grow">
         {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* Note que aqui usamos os IDs antigos, o handleNavigate vai traduzir para a URL nova */}
           <button
             onClick={() => onNavigate("animals-dashboard")}
             className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 flex items-center text-left hover:shadow-lg transition-all group border-l-4 cursor-pointer hover:translate-x-1"
@@ -356,14 +359,14 @@ function HomeComponent({ onNavigate, isAdmin, time }: HomeProps) {
 }
 
 // ============================================================================
-// 2. COMPONENTE APP PRINCIPAL
+// 2. CONTEÚDO DO APP (PROTEGIDO)
 // ============================================================================
-
-export default function App() {
+function AppContent() {
+  // Chama todos os Hooks (useState, useAuth, etc)
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Remove a barra "/" inicial da rota
   const currentPath =
     location.pathname === "/" ? "home" : location.pathname.substring(1);
 
@@ -378,22 +381,17 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // 👇 SISTEMA DE TRADUÇÃO DE ROTAS (O SEGREDO PARA A URL PROFISSIONAL)
-  // Isso converte o ID antigo (ex: register-animal) para a URL nova (ex: animals/register)
+  // 2. DEFINIÇÃO DAS FUNÇÕES
   const getProfessionalUrl = (pageId: string) => {
     switch (pageId) {
       case "home":
         return "/";
-
-      // Animais
       case "animals-dashboard":
         return "/animals";
       case "register-animal":
         return "/animals/register";
       case "animal-report":
         return "/animals/report";
-
-      // Plantação
       case "crops-dashboard":
         return "/crops";
       case "register-planting":
@@ -402,16 +400,12 @@ export default function App() {
         return "/crops/harvest";
       case "crops-report":
         return "/crops/report";
-
-      // Pragas
       case "pests-dashboard":
         return "/pests";
       case "register-pest":
         return "/pests/register";
       case "pest-report":
         return "/pests/report";
-
-      // Finanças
       case "finance-dashboard":
         return "/finance";
       case "register-income":
@@ -420,35 +414,26 @@ export default function App() {
         return "/finance/expense";
       case "financial-report":
         return "/finance/report";
-
-      // Sazonais
       case "seasonal-dashboard":
         return "/seasonal";
       case "register-project":
         return "/seasonal/new";
-
-      // Clima
       case "climate-dashboard":
         return "/climate";
       case "consult-climate":
         return "/climate/consult";
       case "climate-report":
         return "/climate/history";
-
-      // Dieta
       case "diet-dashboard":
         return "/diet";
       case "register-diet":
         return "/diet/register";
       case "diet-report":
         return "/diet/report";
-
-      // Geral
       case "general-report":
         return "/general-report";
-
       default:
-        return "/" + pageId; // Fallback para casos não mapeados
+        return "/" + pageId;
     }
   };
 
@@ -457,8 +442,6 @@ export default function App() {
       showToast("Você precisa ativar o Modo Admin para acessar.", "error");
       return;
     }
-
-    // Converte o ID antigo para a URL nova antes de navegar
     const targetUrl = getProfessionalUrl(pageId);
     navigate(targetUrl);
   };
@@ -467,7 +450,6 @@ export default function App() {
     setToast({ msg, type });
   };
 
-  // Ajuda a identificar qual aba deve estar ativa no menu
   const getCurrentModule = () => {
     if (currentPath.includes("animal")) return "animals";
     if (currentPath.includes("crop")) return "crops";
@@ -480,147 +462,162 @@ export default function App() {
     return "home";
   };
 
+  // O Retorno Condicional
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
+  // Se passou do login, renderiza o sistema
   return (
-    <SuccessProvider>
-      <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
-        <Navigation
-          currentModule={getCurrentModule()}
-          onNavigate={(page) => handleNavigate(page)}
-          isAdmin={isAdmin}
-          onToggleAdmin={() => setIsAdmin(!isAdmin)}
+    <div className="min-h-screen bg-gray-50 font-sans flex flex-col">
+      <Navigation
+        currentModule={getCurrentModule()}
+        onNavigate={(page) => handleNavigate(page)}
+        isAdmin={isAdmin}
+        onToggleAdmin={() => setIsAdmin(!isAdmin)}
+      />
+
+      {toast && (
+        <Toast
+          message={toast.msg}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {currentPath !== "home" && (
+        <Breadcrumbs
+          currentPage={currentPath}
+          onNavigate={(p) => handleNavigate(p)}
+        />
+      )}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomeComponent
+              onNavigate={handleNavigate}
+              isAdmin={isAdmin}
+              time={time}
+            />
+          }
         />
 
-        {toast && (
-          <Toast
-            message={toast.msg}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
+        {/* Animais */}
+        <Route
+          path="/animals"
+          element={<AnimalsDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/animals/register"
+          element={<RegisterAnimal onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/animals/report"
+          element={<AnimalReport onNavigate={handleNavigate} />}
+        />
 
-        {/* Breadcrumbs usa o ID da rota para mostrar o caminho */}
-        {currentPath !== "home" && (
-          <Breadcrumbs
-            currentPage={currentPath}
-            onNavigate={(p) => handleNavigate(p)}
-          />
-        )}
+        {/* Plantação */}
+        <Route
+          path="/crops"
+          element={<CropsDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/crops/planting"
+          element={<RegisterPlanting onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/crops/harvest"
+          element={<RegisterHarvest onNavigate={handleNavigate} />}
+        />
 
-        {/* --- ROTAS PROFISSIONAIS (URLs limpas) --- */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomeComponent
-                onNavigate={handleNavigate}
-                isAdmin={isAdmin}
-                time={time}
-              />
-            }
-          />
+        {/* Pragas */}
+        <Route
+          path="/pests"
+          element={<PestsDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/pests/register"
+          element={<RegisterPest onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/pests/report"
+          element={<PestReport onNavigate={handleNavigate} />}
+        />
 
-          {/* Animais */}
-          <Route
-            path="/animals"
-            element={<AnimalsDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/animals/register"
-            element={<RegisterAnimal onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/animals/report"
-            element={<AnimalReport onNavigate={handleNavigate} />}
-          />
+        {/* Finanças */}
+        <Route
+          path="/finance"
+          element={<FinanceDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/finance/income"
+          element={<RegisterIncome onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/finance/expense"
+          element={<RegisterExpense onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/finance/report"
+          element={<FinancialReport onNavigate={handleNavigate} />}
+        />
 
-          {/* Plantação */}
-          <Route
-            path="/crops"
-            element={<CropsDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/crops/planting"
-            element={<RegisterPlanting onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/crops/harvest"
-            element={<RegisterHarvest onNavigate={handleNavigate} />}
-          />
+        {/* Outros */}
+        <Route
+          path="/seasonal"
+          element={<SeasonalDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/seasonal/new"
+          element={<RegisterProject onNavigate={handleNavigate} />}
+        />
 
-          {/* Pragas */}
-          <Route
-            path="/pests"
-            element={<PestsDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/pests/register"
-            element={<RegisterPest onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/pests/report"
-            element={<PestReport onNavigate={handleNavigate} />}
-          />
+        <Route
+          path="/climate"
+          element={<ClimateDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/climate/consult"
+          element={<ConsultClimate onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/climate/history"
+          element={<ClimateReport onNavigate={handleNavigate} />}
+        />
 
-          {/* Finanças */}
-          <Route
-            path="/finance"
-            element={<FinanceDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/finance/income"
-            element={<RegisterIncome onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/finance/expense"
-            element={<RegisterExpense onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/finance/report"
-            element={<FinancialReport onNavigate={handleNavigate} />}
-          />
+        <Route
+          path="/diet"
+          element={<DietDashboard onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/diet/register"
+          element={<RegisterDiet onNavigate={handleNavigate} />}
+        />
+        <Route
+          path="/diet/report"
+          element={<DietReport onNavigate={handleNavigate} />}
+        />
 
-          {/* Outros */}
-          <Route
-            path="/seasonal"
-            element={<SeasonalDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/seasonal/new"
-            element={<RegisterProject onNavigate={handleNavigate} />}
-          />
+        <Route
+          path="/general-report"
+          element={<GeneralReport onNavigate={handleNavigate} />}
+        />
+      </Routes>
+    </div>
+  );
+}
 
-          <Route
-            path="/climate"
-            element={<ClimateDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/climate/consult"
-            element={<ConsultClimate onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/climate/history"
-            element={<ClimateReport onNavigate={handleNavigate} />}
-          />
-
-          <Route
-            path="/diet"
-            element={<DietDashboard onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/diet/register"
-            element={<RegisterDiet onNavigate={handleNavigate} />}
-          />
-          <Route
-            path="/diet/report"
-            element={<DietReport onNavigate={handleNavigate} />}
-          />
-
-          <Route
-            path="/general-report"
-            element={<GeneralReport onNavigate={handleNavigate} />}
-          />
-        </Routes>
-      </div>
-    </SuccessProvider>
+// ============================================================================
+// 3. APP PRINCIPAL (PROVIDERS)
+// ============================================================================
+export default function App() {
+  return (
+    <AuthProvider>
+      <SuccessProvider>
+        <AppContent />
+      </SuccessProvider>
+    </AuthProvider>
   );
 }
